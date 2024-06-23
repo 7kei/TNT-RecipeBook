@@ -5,7 +5,7 @@ import com.twinkletoes.recipebook.UI.JFX.JFXApp;
 
 public class Main {
     public static void main(String[] args) {
-        boolean consoleStart = false;
+        boolean consoleStart = true;
 
         for (String arg : args) {
             if (arg.strip().equals("-c") || arg.strip().equals("--console"))
