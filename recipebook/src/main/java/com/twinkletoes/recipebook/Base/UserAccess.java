@@ -10,16 +10,10 @@ public enum UserAccess {
     }
 
     public static boolean isAccessible(UserAccess recipe, UserAccess user) {
-        switch (recipe) {
-            case EMPLOYEE:
-                if (user == EMPLOYEE) return true;
-            case MANAGER:
-                if (user == MANAGER) return true;
-            case ADMIN:
-                return true;
-            default:
-                return false;
-        }
+        if (recipe == ADMIN && user == ADMIN) { return true; }
+        if (recipe == MANAGER && (user == ADMIN || user == MANAGER)) { return true; }
+        if (recipe == EMPLOYEE && (user == ADMIN || user == MANAGER || user == EMPLOYEE)) { return true; }
+        return false;
     }
 
     public static String toString(UserAccess in) {

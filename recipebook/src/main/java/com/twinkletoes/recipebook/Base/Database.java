@@ -17,6 +17,9 @@ public class Database {
         try (Scanner scanner = new Scanner(recipeFile)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+
+                if (line.startsWith("MODEL: ")) continue;
+
                 String[] split = line.split(",");
                 
                 String recipeName = split[0];

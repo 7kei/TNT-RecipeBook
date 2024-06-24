@@ -46,6 +46,7 @@ public class Session {
             if (user.getUsername().equals(username)) {
                 if (user.getPassword().equals(password)) {
                     currentUser = user;
+                    loadDatabases();
                     return 0; // Logged in
                 } else {
                     return 1; // Incorrect password

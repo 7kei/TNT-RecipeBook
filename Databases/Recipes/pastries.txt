@@ -1,1 +1,4 @@
-name,description,accesslevel,INGREDIENTS_START,ingred1,ingred2,ingred3,INGREDIENTS_END,STEPS_START,step1,step2,step3,STEPS_END
+MODEL: name,description,accesslevel,INGREDIENTS_START,ingred1,...,INGREDIENTS_END,STEPS_START,step1,step2,step3,STEPS_END
+Example Pastry (Admin),Example Pastry Description (Admin). Should be visible to only Admins,2,INGREDIENTS_START,Example Ingredient 1,Example Ingredient 2,Example Ingredient 3,INGREDIENTS_END,STEPS_START,Example Step 1,Example Step 2,Example Step 3,STEPS_END
+Example Pastry (Manager),Example Pastry Description (Manager). Should be visible to both Admins and Managers,1,INGREDIENTS_START,Example Ingredient 1,Example Ingredient 2,Example Ingredient 3,INGREDIENTS_END,STEPS_START,Example Step 1,Example Step 2,Example Step 3,STEPS_END
+Example Pastry (Employee),Example Pastry Description (Employee). Should be visible to all employees including Admins and Managers.,0,INGREDIENTS_START,Example Ingredient 1,Example Ingredient 2,Example Ingredient 3,INGREDIENTS_END,STEPS_START,Example Step 1,Example Step 2,Example Step 3,STEPS_END
