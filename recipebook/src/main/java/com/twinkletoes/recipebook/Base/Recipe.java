@@ -32,7 +32,7 @@ public class Recipe {
         output.append("Ingredients: \n");
 
         for (String ingredient : ingredients) {
-            output.append("- " + ingredient);
+            output.append(" - " + ingredient + "\n");
         }
         output.append("\n");
 
@@ -40,7 +40,7 @@ public class Recipe {
 
         int count = 1;
         for (String step : steps) {
-            output.append(count + " " + step + "\n");
+            output.append(" " + count + ". " + step + "\n");
             count++;
         }
 
