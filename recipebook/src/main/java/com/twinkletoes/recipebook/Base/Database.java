@@ -29,13 +29,13 @@ public class Database {
                 boolean inStepsList = false;
                 for ( String str : Arrays.asList(split).subList(2, split.length) )
                 {
-                    if (str.equals("INGREDIENTS_START")) inIngredientList = true;
-                    if (inIngredientList) ingredients.add(str);
-                    if (str.equals("INGREDIENTS_END")) inIngredientList = false;
+                    if (str.equals("INGREDIENTS_START")) { inIngredientList = true; continue; }
+                    if (str.equals("INGREDIENTS_END")) { inIngredientList = false; continue; }
+                    if (str.equals("STEPS_START")) { inStepsList = true; continue; }
+                    if (str.equals("STEPS_END")) { inStepsList = false; continue; }
 
-                    if (str.equals("STEPS_START")) inStepsList = true;
                     if (inStepsList) steps.add(str);
-                    if (str.equals("STEPS_END")) inStepsList = false;
+                    if (inIngredientList) ingredients.add(str);
                 }
 
                 Recipe recipe = new Recipe(recipeName, recipeDescription, recipeAccessLevel, ingredients, steps);
