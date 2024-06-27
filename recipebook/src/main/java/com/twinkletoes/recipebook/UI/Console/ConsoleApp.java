@@ -8,7 +8,7 @@ public class ConsoleApp {
 
     private void beverageMenu(Scanner scanner) {
         System.out.println("All available beverage recipes: ");
-        List<Recipe> beverages = currentSession.getBeverages();
+        List<Recipe> beverages = currentSession.getUserBeverages();
 
         int count = 0;
         for (Recipe beverageRecipe : beverages) {
@@ -19,26 +19,27 @@ public class ConsoleApp {
 
         System.out.println("\nWhat do you want to do?");
         System.out.println("[1] Display full recipe for a beverage.");
-        System.out.println("[2] Back to recipe menu.");
+        System.out.println("[0] Back to recipe menu.");
 
         char choice = scanner.nextLine().strip().toCharArray()[0];
 
         switch (choice) {
             case '1':
                 System.out.print("Type in the number of the recipe: ");
-                int chosenRecipe = Integer.parseInt(scanner.nextLine());
-                System.out.println(beverages.get(chosenRecipe).toString());
+                int chosenRecipeDisplay = Integer.parseInt(scanner.nextLine());
+                System.out.println(beverages.get(chosenRecipeDisplay).toString());
+                mainMenu(scanner);
                 break;
-            case '2':
+            case '0':
             default:
-                recipeMenu(scanner);
+                mainMenu(scanner);
                 break;
         }
     }
 
     private void pastryMenu(Scanner scanner) {
         System.out.println("All available pastry recipes: ");
-        List<Recipe> pastries = currentSession.getPastries();
+        List<Recipe> pastries = currentSession.getUserPastries();
 
         int count = 0;
         for (Recipe pastryRecipe : pastries) {
@@ -49,7 +50,7 @@ public class ConsoleApp {
 
         System.out.println("\nWhat do you want to do?");
         System.out.println("[1] Display full recipe for a beverage.");
-        System.out.println("[2] Back to recipe menu.");
+        System.out.println("[0] Back to recipe menu.");
 
         char choice = scanner.nextLine().strip().toCharArray()[0];
 
@@ -58,19 +59,41 @@ public class ConsoleApp {
                 System.out.print("Type in the number of the recipe: ");
                 int chosenRecipe = Integer.parseInt(scanner.nextLine());
                 System.out.println(pastries.get(chosenRecipe).toString());
+                mainMenu(scanner);
                 break;
-            case '2':
+            case '0':
             default:
-                recipeMenu(scanner);
+                mainMenu(scanner);
                 break;
         }
     }
 
-    private void recipeMenu(Scanner scanner) {
-        System.out.println("Welcome to the recipe menu, " + currentSession.getCurrentUser().getUserFullName() + "!");
+    private void changePassword(Scanner scanner) {
+        System.out.println("Enter new password (, or spaces not allowed)");
+        String newPassword = scanner.nextLine();
+        User userBackup = new User(currentSession.getCurrentUser());
+        int result = currentSession.changeUserPassword(newPassword);
+        if (result == 1) {
+            System.out.println("Password has invalid characters. Try again.");
+            changePassword(scanner);
+        } else if (result != 0) {
+            System.out.println("An error occured. Reverting changes and returning to main menu.");
+            currentSession.setCurrentUser(userBackup);
+            mainMenu(scanner);
+        }
+        System.out.println("Password changed. Returning to main menu.");
+        mainMenu(scanner);
+    }
+
+    private void mainMenu(Scanner scanner) {
+        boolean isAdmin = currentSession.getCurrentUser().getUserAccessLevel() == UserAccess.ADMIN;
+        System.out.println("Welcome to the main menu, " + currentSession.getCurrentUser().getUserFullName() + "!");
         System.out.println("What do you want to do?");
         System.out.println("[1] Display beverage recipes available to the user.");
         System.out.println("[2] Display pastry recipes available to the user.");
+        System.out.println("[3] Change password.");
+        if (isAdmin) System.out.println("[4] ADMINS ONLY: Open Admin Menu");
+
         System.out.println("[0] Exit the program.");
 
         char choice = scanner.nextLine().strip().toCharArray()[0];
@@ -81,6 +104,13 @@ public class ConsoleApp {
                 break;
             case '2':
                 pastryMenu(scanner);
+                break;
+            case '3':
+                changePassword(scanner);
+                break;
+            case '4':
+                if (isAdmin) { }
+                else mainMenu(scanner);
                 break;
             default:
                 System.out.println("Unimplemented");
@@ -110,6 +140,33 @@ public class ConsoleApp {
         }
     }
 
+    private void signUp(Scanner scanner) {
+        Session session = new Session();
+        boolean isSignedUp = false;
+        while (!isSignedUp) {
+            System.out.print("User name: ");
+            String username = scanner.nextLine();
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
+            System.out.print("What is the user's full name: ");
+            String userFullName = scanner.nextLine();
+            System.out.println("What is the user's access level?");
+            System.out.print("[0] Employee, [1] Manager, [2] Admin : ");
+            int accessLevel = Integer.parseInt(scanner.nextLine());
+
+            int result = session.signUp(username, password, userFullName, accessLevel);
+            if (result == 0) {
+                System.out.println("Signed up!");
+                currentSession = session;
+                isSignedUp = true;
+            } else if (result == 1) {
+                System.out.println("User with same username already exists. Please try again.");
+            } else {
+                System.out.println("An error occured. Please try again.");
+            }
+        }
+    }
+
     private void loginMenu(Scanner scanner) {
         System.out.println("[1] Login\n[2] Sign Up\n[0] Exit Program");
 
@@ -120,6 +177,8 @@ public class ConsoleApp {
                 login(scanner);
                 break;
             case '2':
+                signUp(scanner);
+                break;
             default:
                 System.out.println("Unimplemented");
             case '0':
@@ -128,6 +187,11 @@ public class ConsoleApp {
     }
 
     private void exitProgram(Scanner scanner) {
+        if (currentSession != null) {
+            System.out.println("Saving databases.");
+            currentSession.saveDatabases();
+        }
+        scanner.close();
         System.out.println("Exiting program.");
         System.exit(0);
     }
@@ -136,6 +200,6 @@ public class ConsoleApp {
         System.out.println("Welcome to TNT Recipe Book!");
         Scanner scanner = new Scanner(System.in);
         loginMenu(scanner);
-        recipeMenu(scanner);
+        mainMenu(scanner);
     }
 }

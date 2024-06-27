@@ -3,10 +3,33 @@ package com.twinkletoes.recipebook.Base;
 public enum UserAccess {
     EMPLOYEE,
     MANAGER,
-    ADMIN;
+    ADMIN,
+    UNKNOWN;
 
     public static UserAccess fromInt(int num) {
-        return UserAccess.values()[num];
+        switch (num) {
+            case 0:
+                return EMPLOYEE;
+            case 1:
+                return MANAGER;
+            case 2:
+                return ADMIN;
+        }
+        return UNKNOWN;
+    }
+
+    public static int toInt(UserAccess inputAccess) {
+        switch (inputAccess) {
+            case EMPLOYEE:
+                return 0;
+            case MANAGER:
+                return 1;
+            case ADMIN:
+                return 2;
+            case UNKNOWN:
+                return -1;
+        }
+        return -1;
     }
 
     public static boolean isAccessible(UserAccess recipe, UserAccess user) {

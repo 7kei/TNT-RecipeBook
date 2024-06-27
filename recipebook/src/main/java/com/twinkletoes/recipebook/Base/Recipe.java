@@ -3,13 +3,15 @@ package com.twinkletoes.recipebook.Base;
 import java.util.List;
 
 public class Recipe {
+    private int id;
     private String name;
     private String description;
     private UserAccess recipeAccessLevel;
     private List<String> ingredients;
     private List<String> steps;
 
-    public Recipe(String name, String description, UserAccess accessLevel, List<String> ingredients, List<String> steps) {
+    public Recipe(int id, String name, String description, UserAccess accessLevel, List<String> ingredients, List<String> steps) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
@@ -17,6 +19,7 @@ public class Recipe {
         this.recipeAccessLevel = accessLevel;
     }
 
+    public int getId() { return this.id; }
     public String getName() { return this.name; }
     public String getDescription() { return this.description; }
     public UserAccess getRecipeAccessLevel() { return this.recipeAccessLevel; }

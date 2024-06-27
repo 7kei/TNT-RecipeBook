@@ -1,3 +1,4 @@
-example_admin,example_admin_password,Example User (Admin),2
-example_manager,example_manager_password,Example User (Manager),1
-example_employee,example_employee_password,Example User (Employee),0
+MODEL: id,username,password,Full Name,UserAccessLevel
+0,example_admin,example_admin_password,Example User (Admin),2
+1,example_manager,example_manager_password,Example User (Manager),1
+2,example_employee,example_employee_password,Example User (Employee),0
