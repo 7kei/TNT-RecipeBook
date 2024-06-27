@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
-    private List<User> currentUsers;
+    private List<User> allUsers;
     private List<Recipe> globalPastriesList;
     private List<Recipe> globalPastryList;
     private List<Recipe> userPastriesList;
@@ -13,12 +13,13 @@ public class Session {
 
     public Session() {
         // Initialize users database
-        this.currentUsers = Database.loadUserDatabase();
+        this.allUsers = Database.loadUserDatabase();
         loadGlobalDatabases();
     }
 
     // Getters
     public User getCurrentUser() { return this.currentUser; }
+    public List<User> getAllUsers() { return this.allUsers; }
     public List<Recipe> getGlobalBeverages() { return this.globalPastryList; }
     public List<Recipe> getGlobalPastries() { return this.globalPastriesList; }
     public List<Recipe> getUserBeverages() { return this.userPastryList; }
@@ -51,7 +52,7 @@ public class Session {
     }
 
     public int login(String username, String password) {
-        for (User user : this.currentUsers) {
+        for (User user : this.allUsers) {
             if (user.getUsername().equals(username)) {
                 if (user.getPassword().equals(password)) {
                     currentUser = user;
@@ -69,7 +70,7 @@ public class Session {
         // Generate id
         int id = (int)Math.random();
         boolean duplicateId = false;
-        for (User user : this.currentUsers) {
+        for (User user : this.allUsers) {
             if (user.getUsername().equals(userName)) {
                 return 1; // User with same username already exists.
             }
@@ -79,13 +80,13 @@ public class Session {
         while (duplicateId) {
             id = (int)Math.random();
             duplicateId = false;
-            for (User user : this.currentUsers) {
+            for (User user : this.allUsers) {
                 if (user.getId() == id) { duplicateId = true; }
             }
         }
 
         User newUser = new User(id, userName, password, userFullName, accessLevel);
-        this.currentUsers.add(newUser);
+        this.allUsers.add(newUser);
         this.currentUser = newUser;
         loadUserDatabases();
         return 0; 
@@ -95,9 +96,9 @@ public class Session {
         // Save user in global user db
         int currentUserId = this.currentUser.getId();
         int counter = 0;
-        for (User user : this.currentUsers) {
+        for (User user : this.allUsers) {
             if (user.getId() == currentUserId) {
-                this.currentUsers.set(counter, this.currentUser);
+                this.allUsers.set(counter, this.currentUser);
                 break;
             }
             counter++;
@@ -127,7 +128,7 @@ public class Session {
         saveCurrentUserInGlobalDb();
 
         // Save user db
-        Database.saveUserDatabase(currentUsers);
+        Database.saveUserDatabase(allUsers);
 
         // Reflect user beverages list to global
         for (Recipe userbeverage : userPastryList) {
@@ -146,5 +147,17 @@ public class Session {
         }
         // Save pastries
         Database.saveRecipeList(globalPastriesList, pastriesDatabaseFileName);
+    }
+
+    public int removeUser(int index) {
+        if (allUsers.get(index).getId() == currentUser.getId()) { return 1; } // Removed user cannot be the same logged in user
+
+        // Remove user
+        allUsers.remove(index);
+
+        // Save db
+        saveDatabases();
+
+        return 0;
     }
 }

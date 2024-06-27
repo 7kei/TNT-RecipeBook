@@ -27,6 +27,13 @@ public class ConsoleApp {
             case '1':
                 System.out.print("Type in the number of the recipe: ");
                 int chosenRecipeDisplay = Integer.parseInt(scanner.nextLine());
+
+                while (chosenRecipeDisplay >= beverages.size() || chosenRecipeDisplay < 0) {
+                    System.out.println("Invalid index. Type new index.");
+                    System.out.print("Type in the number of the recipe: ");
+                    chosenRecipeDisplay = Integer.parseInt(scanner.nextLine());
+                }
+
                 System.out.println(beverages.get(chosenRecipeDisplay).toString());
                 mainMenu(scanner);
                 break;
@@ -57,8 +64,15 @@ public class ConsoleApp {
         switch (choice) {
             case '1':
                 System.out.print("Type in the number of the recipe: ");
-                int chosenRecipe = Integer.parseInt(scanner.nextLine());
-                System.out.println(pastries.get(chosenRecipe).toString());
+                int chosenRecipeDisplay = Integer.parseInt(scanner.nextLine());
+
+                while (chosenRecipeDisplay >= pastries.size() || chosenRecipeDisplay < 0) {
+                    System.out.println("Invalid index. Type new index.");
+                    System.out.print("Type in the number of the recipe: ");
+                    chosenRecipeDisplay = Integer.parseInt(scanner.nextLine());
+                }
+
+                System.out.println(pastries.get(chosenRecipeDisplay).toString());
                 mainMenu(scanner);
                 break;
             case '0':
@@ -81,7 +95,37 @@ public class ConsoleApp {
             currentSession.setCurrentUser(userBackup);
             mainMenu(scanner);
         }
+        currentSession.saveDatabases();
         System.out.println("Password changed. Returning to main menu.");
+        mainMenu(scanner);
+    }
+
+    private void removeUser(Scanner scanner) {
+        System.out.println("Current users in database: ");
+        for (int i = 0; i < currentSession.getAllUsers().size(); i++) {
+            System.out.println("["+i+"]: "+currentSession.getAllUsers().get(i).getUsername());
+        }
+
+        System.out.print("Which user index do u want to remove?: ");
+        int choice = Integer.parseInt(scanner.nextLine());
+
+        while (choice >= currentSession.getAllUsers().size() || choice < 0) {
+            System.out.println("Invalid index entered. Please enter a new index.");
+            System.out.print(": ");
+            choice = Integer.parseInt(scanner.nextLine());
+        }
+
+        int result = currentSession.removeUser(choice);
+
+        if (result == 1) {
+            System.out.println("Removed user cannot be the same as logged in user. Try again.");
+            removeUser(scanner);
+        } else if (result != 0) {
+            System.out.println("An error occured. Returning to main menu.");
+            mainMenu(scanner);
+        }
+
+        System.out.println("Successfully removed user. Returning to main menu.");
         mainMenu(scanner);
     }
 
@@ -92,7 +136,7 @@ public class ConsoleApp {
         System.out.println("[1] Display beverage recipes available to the user.");
         System.out.println("[2] Display pastry recipes available to the user.");
         System.out.println("[3] Change password.");
-        if (isAdmin) System.out.println("[4] ADMINS ONLY: Open Admin Menu");
+        if (isAdmin) System.out.println("[4] ADMINS ONLY: Remove/manage users");
 
         System.out.println("[0] Exit the program.");
 
@@ -109,7 +153,7 @@ public class ConsoleApp {
                 changePassword(scanner);
                 break;
             case '4':
-                if (isAdmin) { }
+                if (isAdmin) { removeUser(scanner); }
                 else mainMenu(scanner);
                 break;
             default:
