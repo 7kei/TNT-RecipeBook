@@ -2,6 +2,7 @@ package com.twinkletoes.recipebook.Base;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Session {
     private List<User> allUsers;
@@ -68,7 +69,10 @@ public class Session {
 
     public int signUp(String userName, String password, String userFullName, int accessLevel) {
         // Generate id
-        int id = (int)Math.random();
+
+        Random ran = new Random();
+        int id = ran.nextInt();
+
         boolean duplicateId = false;
         for (User user : this.allUsers) {
             if (user.getUsername().equals(userName)) {
@@ -89,10 +93,11 @@ public class Session {
         this.allUsers.add(newUser);
         this.currentUser = newUser;
         loadUserDatabases();
+        saveDatabases();
         return 0; 
     }
 
-    private int saveCurrentUserInGlobalDb() {
+    private void saveCurrentUserInGlobalDb() {
         // Save user in global user db
         int currentUserId = this.currentUser.getId();
         int counter = 0;
@@ -103,7 +108,6 @@ public class Session {
             }
             counter++;
         }
-        return 0;
     }
 
     public int changeUserPassword(String newPassword) {
@@ -117,34 +121,37 @@ public class Session {
         currentUser.setPassword(newPassword.strip());
 
         // Update global user db
-        return saveCurrentUserInGlobalDb();
+        saveCurrentUserInGlobalDb();
+        saveDatabases();
+        return 0;
     }
 
     public void saveDatabases() {
         String beverageDatabaseFileName = System.getProperty("user.dir") + "\\Databases\\Recipes\\beverages.txt";
         String pastriesDatabaseFileName = System.getProperty("user.dir") + "\\Databases\\Recipes\\pastries.txt";
 
-        // Update user
-        saveCurrentUserInGlobalDb();
+        // if user is logged in
+        if (currentUser != null) {
+            saveCurrentUserInGlobalDb();
+            // Reflect user beverages list to global
+            for (Recipe userbeverage : userPastryList) {
+                for (Recipe globalBeverage : globalPastryList) {
+                    if (userbeverage.getId() == globalBeverage.getId()) globalBeverage = userbeverage;
+                }
+            }
+
+            // Reflect user pastries list to global
+            for (Recipe userPastry : userPastryList) {
+                for (Recipe globalPastry : globalPastryList) {
+                    if (userPastry.getId() == globalPastry.getId()) globalPastry = userPastry;
+                }
+            }
+        }
 
         // Save user db
         Database.saveUserDatabase(allUsers);
-
-        // Reflect user beverages list to global
-        for (Recipe userbeverage : userPastryList) {
-            for (Recipe globalBeverage : globalPastryList) {
-                if (userbeverage.getId() == globalBeverage.getId()) globalBeverage = userbeverage;
-            }
-        }
         // Save beverages
         Database.saveRecipeList(globalPastryList, beverageDatabaseFileName);
-
-        // Reflect user pastries list to global
-        for (Recipe userPastry : userPastryList) {
-            for (Recipe globalPastry : globalPastryList) {
-                if (userPastry.getId() == globalPastry.getId()) globalPastry = userPastry;
-            }
-        }
         // Save pastries
         Database.saveRecipeList(globalPastriesList, pastriesDatabaseFileName);
     }

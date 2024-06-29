@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.twinkletoes.recipebook.UI.JFX.AdminMenuController">
+   <children>
+      <Label text="Select user to remove" />
+      <ListView fx:id="usersListView" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Button fx:id="removeUserButton" mnemonicParsing="false" onAction="#removeUserAction" text="Remove user" />
+            <Button fx:id="backToMenuButton" mnemonicParsing="false" onAction="#backToMenuAction" text="Back to Menu" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

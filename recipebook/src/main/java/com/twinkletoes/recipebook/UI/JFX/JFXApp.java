@@ -8,27 +8,39 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.twinkletoes.recipebook.Base.Session;
+
 /**
  * JavaFX App
  */
 public class JFXApp extends Application {
 
     private static Scene scene;
+    private Session currentSession;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        currentSession = new Session();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent menu = loader.load();
+        
+        LoginController controller = loader.getController();
+        controller.init(currentSession); 
+
+        scene = new Scene(menu, 640, 480);
+        
         stage.setScene(scene);
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    @Override
+    public void stop(){
+        currentSession.saveDatabases();
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(JFXApp.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+    public static void setRoot(Parent in) throws IOException {
+        scene.setRoot(in);
     }
 
     public void main() {

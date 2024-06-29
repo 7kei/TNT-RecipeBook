@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="mainMenuVbox" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.twinkletoes.recipebook.UI.JFX.MainMenuController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Label text="Main Menu" />
+      <Button fx:id="displayBeverageRecipesButton" mnemonicParsing="false" onAction="#displayBeverageRecipes" text="Display beverage recipes" />
+      <Button fx:id="displayPastryRecipesButton" mnemonicParsing="false" onAction="#displayPastryRecipes" text="Display pastry recipes" />
+      <Button fx:id="changePasswordButton" mnemonicParsing="false" onAction="#changePassword" text="Change password" />
+      <Button fx:id="removeUsersButton" mnemonicParsing="false" onAction="#removeUsers" text="Remove users" />
+      <Button fx:id="exitProgramButton" mnemonicParsing="false" onAction="#exitProgram" text="Exit program" />
+   </children>
+</VBox>
