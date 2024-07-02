@@ -32,11 +32,11 @@ public class RecipeMenuController {
         switch (type) {
             case 0:
                 recipeText.setText("Available beverages:");
-                recipes = currentSession.getGlobalBeverages();
+                recipes = currentSession.getUserBeverages();
                 break;
             case 1: 
                 recipeText.setText("Available pastries:");
-                recipes = currentSession.getGlobalPastries();
+                recipes = currentSession.getUserPastries();
                 break;
         }
 
